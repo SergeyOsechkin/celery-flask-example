@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  redis:
+    image: 'redis:5.0-alpine'
+
+  celery:
+    build: .
+    command: celery -A app.celery worker --loglevel=info
+    links:
+      - redis
+
+  app:
+    build: .
+    ports:
+      - 5000:5000
+    links:
+      - celery
